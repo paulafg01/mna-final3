@@ -1,77 +1,62 @@
 
- document.getElementById("mna-sf").addEventListener("submit", function (e) {
-  e.preventDefault();
-
-  const nome = document.getElementById("nome").value.trim();
+ function calcularPontuacao() {
+  const nome = document.getElementById("nome").value;
   const respostas = [
-    Number(this.p1.value),
-    Number(this.p2.value),
-    Number(this.p3.value),
-    Number(this.p4.value),
-    Number(this.p5.value),
-    Number(this.p6.value),
+    document.querySelector('select[name="p1"]').value,
+    document.querySelector('select[name="p2"]').value,
+    document.querySelector('select[name="p3"]').value,
+    document.querySelector('select[name="p4"]').value,
+    document.querySelector('select[name="p5"]').value,
+    document.querySelector('select[name="p6"]').value
   ];
 
-  const total = respostas.reduce((a, b) => a + b, 0);
+  const pontuacao = respostas.reduce((total, val) => total + parseInt(val), 0);
 
-  let resultado = "";
-  if (total >= 12) {
-    resultado = "Estado nutricional normal";
-  } else if (total >= 8) {
-    resultado = "Risco de desnutrição";
-  } else {
-    resultado = "Desnutrido";
-  }
+  let mensagem = `<h3>Resultado MNA-SF</h3><p><strong>${nome}</strong> obteve <strong>${pontuacao} pontos</strong>.</p>`;
 
-  document.getElementById("resultado-sf").innerHTML = `
-    <h3>Resultado MNA-SF</h3>
-    <p><strong>Paciente:</strong> ${nome}</p>
-    <p><strong>Pontuação:</strong> ${total} pontos</p>
-    <p><strong>Classificação:</strong> ${resultado}</p>
-  `;
-
-  // Se pontuação for 11 ou menos, mostra formulário completo
-  if (total <= 11) {
+  if (pontuacao <= 11) {
     document.getElementById("mna-completo").style.display = "block";
+    mensagem += `<p>Resultado indica possível risco nutricional. Prossiga com o MNA completo abaixo.</p>`;
   } else {
     document.getElementById("mna-completo").style.display = "none";
+    mensagem += `<p>Estado nutricional aparentemente adequado. MNA completo não necessário.</p>`;
   }
-});
+
+  document.getElementById("resultado-sf").innerHTML = mensagem;
+}
 
 function finalizar() {
-  const c1 = Number(document.querySelector('[name="c1"]').value);
-  const c2 = Number(document.querySelector('[name="c2"]').value);
+  const nome = document.getElementById("nome").value;
+  const c1 = parseInt(document.querySelector('select[name="c1"]').value);
+  const c2 = parseInt(document.querySelector('select[name="c2"]').value);
 
-  const totalCompleto = c1 + c2;
+  const pontuacaoSF = [
+    parseInt(document.querySelector('select[name="p1"]').value),
+    parseInt(document.querySelector('select[name="p2"]').value),
+    parseInt(document.querySelector('select[name="p3"]').value),
+    parseInt(document.querySelector('select[name="p4"]').value),
+    parseInt(document.querySelector('select[name="p5"]').value),
+    parseInt(document.querySelector('select[name="p6"]').value)
+  ].reduce((a, b) => a + b, 0);
+
+  const pontuacaoCompleta = pontuacaoSF + c1 + c2;
 
   const resultadoFinal = `
-    <h3>Resultado Final MNA</h3>
-    <p><strong>Pontuação adicional:</strong> ${totalCompleto} pontos</p>
-    <p><strong>Total final (MNA-SF + completo):</strong> (soma manual necessária)</p>
+    <h3>Resultado MNA Completo</h3>
+    <p><strong>${nome}</strong> obteve <strong>${pontuacaoCompleta} pontos</strong> no total.</p>
   `;
 
   document.getElementById("resultado-final").innerHTML = resultadoFinal;
 
-  gerarPDF();
+  gerarPDF(nome, pontuacaoCompleta);
 }
 
-function gerarPDF() {
-  const doc = new window.jspdf.jsPDF();
-  const nome = document.getElementById("nome").value.trim();
-
-  doc.text(`Mini Avaliação Nutricional - MNA`, 10, 10);
-  doc.text(`Nome do paciente: ${nome}`, 10, 20);
-
-  const resultadoSf = document.getElementById("resultado-sf").innerText;
-  const resultadoCompleto = document.getElementById("resultado-final").innerText;
-
-  doc.text("Resultado MNA-SF:", 10, 30);
-  doc.text(resultadoSf, 10, 40);
-
-  if (resultadoCompleto) {
-    doc.text("Resultado MNA Completo:", 10, 80);
-    doc.text(resultadoCompleto, 10, 90);
-  }
-
-  doc.save(`MNA_${nome || "paciente"}.pdf`);
+function gerarPDF(nome, pontuacao) {
+  const doc = new jsPDF();
+  doc.setFontSize(14);
+  doc.text("Mini Avaliação Nutricional (MNA)", 20, 20);
+  doc.setFontSize(12);
+  doc.text(`Nome do paciente: ${nome}`, 20, 40);
+  doc.text(`Pontuação total: ${pontuacao}`, 20, 50);
+  doc.save(`${nome}_MNA.pdf`);
 }
