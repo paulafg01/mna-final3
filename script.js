@@ -52,7 +52,7 @@ function finalizar() {
         <p><strong>Paciente:</strong> ${nome}</p>
         <p><strong>Pontuação Total:</strong> ${total} pontos</p>
     `;
-
+window.jsPDF = window.jspdf.jsPDF;
     gerarPDF(nome, total);
 }
 
