@@ -1,73 +1,108 @@
-body {
-  font-family: Arial, sans-serif;
-  margin: 20px;
-  background-color: #f7f7f7;
-  color: #333;
-}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MNA - Mini Avaliação Nutricional</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>MNA - Mini Avaliação Nutricional</h1>
+    <p>App desenvolvido por Paula Guedes</p>
 
-h1, h2 {
-  color: #003366;
-}
+    <!-- Formulário MNA-SF -->
+    <form id="mna-sf">
+        <label>Nome do paciente: <input type="text" name="nome" id="nome"></label><br><br>
 
-form {
-  background: #fff;
-  padding: 20px;
-  margin-bottom: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
+        <div class="pergunta">
+            <label>1. Perda de apetite?</label><br>
+            <select name="p1">
+                <option value="0">Grave</option>
+                <option value="1">Moderada</option>
+                <option value="2">Sem perda</option>
+            </select>
+        </div>
 
-.pergunta {
-  margin-bottom: 15px;
-}
+        <div class="pergunta">
+            <label>2. Perda de peso?</label><br>
+            <select name="p2">
+                <option value="0">≥3kg</option>
+                <option value="1">1–3kg</option>
+                <option value="2">Não sabe</option>
+                <option value="3">Sem perda</option>
+            </select>
+        </div>
 
-label {
-  font-weight: bold;
-}
+        <div class="pergunta">
+            <label>3. Mobilidade?</label><br>
+            <select name="p3">
+                <option value="0">Acamado</option>
+                <option value="1">Anda com ajuda</option>
+                <option value="2">Anda sozinho</option>
+            </select>
+        </div>
 
-select, input[type="text"] {
-  width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
+        <div class="pergunta">
+            <label>4. Estresse ou doença aguda?</label><br>
+            <select name="p4">
+                <option value="0">Sim</option>
+                <option value="2">Não</option>
+            </select>
+        </div>
 
-button {
-  background-color: #003366;
-  color: #fff;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
+        <div class="pergunta">
+            <label>5. Problemas neuropsicológicos?</label><br>
+            <select name="p5">
+                <option value="0">Demência ou depressão severa</option>
+                <option value="1">Demência leve</option>
+                <option value="2">Sem problemas</option>
+            </select>
+        </div>
 
-button:hover {
-  background-color: #00509e;
-}
+        <div class="pergunta">
+            <label>6. IMC?</label><br>
+            <select name="p6">
+                <option value="0">Menor que 19</option>
+                <option value="1">Entre 19 e 21</option>
+                <option value="2">Entre 21 e 23</option>
+                <option value="3">Maior que 23</option>
+            </select>
+        </div>
 
-#resultado-sf, #resultado-final {
-  margin-top: 20px;
-  padding: 15px;
-  background-color: #e8f0fe;
-  border-left: 4px solid #003366;
-  border-radius: 4px;
-}
+        <button type="submit">Calcular Pontuação</button>
+    </form>
 
-#mna-completo {
-  margin-top: 30px;
-  background: #eef;
-  padding: 15px;
-  border-radius: 6px;
-}
+    <div id="resultado-sf"></div>
 
-@media (max-width: 600px) {
-  body {
-    margin: 10px;
-  }
+    <!-- MNA Completo (invisível no início) -->
+    <div id="mna-completo" style="display: none;">
+        <h2>MNA Completo</h2>
+        <p>Você pode inserir aqui o formulário completo com mais perguntas, se desejar.</p>
 
-  button {
-    width: 100%;
-  }
-}
+        <form id="mna-completo-form">
+            <div class="pergunta">
+                <label>7. Vive de forma independente?</label><br>
+                <select name="c1">
+                    <option value="2">Sim</option>
+                    <option value="1">Não</option>
+                </select>
+            </div>
 
+            <div class="pergunta">
+                <label>8. Quantas refeições faz por dia?</label><br>
+                <select name="c2">
+                    <option value="2">3 ou mais</option>
+                    <option value="1">2</option>
+                    <option value="0">1 ou nenhuma</option>
+                </select>
+            </div>
+
+            <button type="button" onclick="finalizar()">Gerar PDF</button>
+        </form>
+    </div>
+
+    <div id="resultado-final"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
