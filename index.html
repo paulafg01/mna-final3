@@ -1,205 +1,160 @@
 
 
        
-        
- <!DOCTYPE html>
-<html lang="pt-BR">
+  <!DOCTYPE html>
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MNA – Avaliação Nutricional</title>
-  <link rel="stylesheet" href="style.css">
-
-  <!-- Biblioteca jsPDF -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script>
-    window.jsPDF = window.jspdf.jsPDF;
-  </script>
-
-  <!-- Seu script principal -->
-  <script src="script.js" defer></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MNA - Avaliação Nutricional</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Mini Avaliação Nutricional (MNA)</h1>
+  <h1>MNA - Avaliação Nutricional do Idoso</h1>
+  <form id="mna-form">
+    <label for="nome">Nome do paciente:</label>
+    <input type="text" id="nome" required />
 
-  <form id="formulario">
-    <label for="nome">Nome do paciente:</label>
-    <input type="text" id="nome" name="nome" required><br><br>
+    <div id="mna-sf">
+      <h2>Mini Nutritional Assessment - MNA-SF</h2>
 
-    <!-- MNA-SF -->
-    <h2>MNA-SF</h2>
-    <div class="pergunta">
-      <label>1. Perda de apetite</label>
-      <select name="p1">
-        <option value="2">Sem perda</option>
-        <option value="1">Leve perda</option>
-        <option value="0">Perda severa</option>
-      </select>
-    </div>
+      <label>1. Perda de apetite ou problemas alimentares?</label>
+      <select name="pergunta1">
+        <option value="0">Perda severa de apetite</option>
+        <option value="1">Perda moderada de apetite</option>
+        <option value="2">Sem perda de apetite</option>
+      </select>
 
-    <div class="pergunta">
-      <label>2. Perda de peso</label>
-      <select name="p2">
-        <option value="3">Nenhuma</option>
-        <option value="2">1–3 kg</option>
-        <option value="1">>3 kg</option>
-        <option value="0">Não sabe</option>
-      </select>
-    </div>
+      <label>2. Perda de peso nos últimos 3 meses?</label>
+      <select name="pergunta2">
+        <option value="0">Perda > 3kg</option>
+        <option value="1">Não sabe</option>
+        <option value="2">Perda entre 1 e 3kg</option>
+        <option value="3">Sem perda de peso</option>
+      </select>
 
-    <div class="pergunta">
-      <label>3. Mobilidade</label>
-      <select name="p3">
-        <option value="2">Sem limitações</option>
-        <option value="1">Anda com ajuda</option>
-        <option value="0">Acamado</option>
-      </select>
-    </div>
+      <label>3. Mobilidade?</label>
+      <select name="pergunta3">
+        <option value="0">Acamado</option>
+        <option value="1">Capaz de sair da cama</option>
+        <option value="2">Sai de casa</option>
+      </select>
 
-    <div class="pergunta">
-      <label>4. Estresse agudo</label>
-      <select name="p4">
-        <option value="2">Não</option>
-        <option value="0">Sim</option>
-      </select>
-    </div>
+      <label>4. Sofreu estresse ou doença aguda nos últimos 3 meses?</label>
+      <select name="pergunta4">
+        <option value="0">Sim</option>
+        <option value="2">Não</option>
+      </select>
 
-    <div class="pergunta">
-      <label>5. Problemas neuropsicológicos</label>
-      <select name="p5">
-        <option value="2">Nenhum</option>
-        <option value="1">Depressão leve</option>
-        <option value="0">Demência grave</option>
-      </select>
-    </div>
+      <label>5. Problemas neuropsicológicos?</label>
+      <select name="pergunta5">
+        <option value="0">Demência grave ou depressão</option>
+        <option value="1">Demência leve</option>
+        <option value="2">Sem problemas</option>
+      </select>
 
-    <div class="pergunta">
-      <label>6. IMC</label>
-      <select name="p6">
-        <option value="3">≥23</option>
-        <option value="2">21–22.9</option>
-        <option value="1">19–20.9</option>
-        <option value="0">&lt;19</option>
-      </select>
-    </div>
+      <label>6. IMC ou circunferência da panturrilha?</label>
+      <select name="pergunta6">
+        <option value="0">IMC < 19 ou CP < 31 cm</option>
+        <option value="1">IMC 19 a 21</option>
+        <option value="2">IMC 21 a 23</option>
+        <option value="3">IMC ≥ 23</option>
+      </select>
+    </div>
 
-    <button type="button" onclick="calcular()">Calcular</button>
-  </form>
+    <div id="mna-completo" style="display: none;">
+      <h2>MNA Completo</h2>
 
-  <div id="resultado-final"></div>
+      <label>7. Vive de forma independente?</label>
+      <select name="pergunta7">
+        <option value="0">Não</option>
+        <option value="1">Sim</option>
+      </select>
 
-  <!-- MNA COMPLETO -->
-  <form id="mna-completo" style="display:none;">
-    <h2>MNA Completo</h2>
+      <label>8. Toma mais de 3 medicamentos por dia?</label>
+      <select name="pergunta8">
+        <option value="0">Sim</option>
+        <option value="1">Não</option>
+      </select>
 
-    <!-- Perguntas c1 a c12 -->
-    <div class="pergunta">
-      <label>1. Vive independentemente?</label>
-      <select name="c1">
-        <option value="1">Sim</option>
-        <option value="0">Não</option>
-      </select>
-    </div>
+      <label>9. Úlceras de pressão ou feridas?</label>
+      <select name="pergunta9">
+        <option value="0">Sim</option>
+        <option value="1">Não</option>
+      </select>
 
-    <div class="pergunta">
-      <label>2. Usa mais de 3 medicamentos por dia?</label>
-      <select name="c2">
-        <option value="0">Sim</option>
-        <option value="1">Não</option>
-      </select>
-    </div>
+      <label>10. Quantas refeições por dia?</label>
+      <select name="pergunta10">
+        <option value="0">1 refeição</option>
+        <option value="1">2 refeições</option>
+        <option value="2">3 ou mais</option>
+      </select>
 
-    <div class="pergunta">
-      <label>3. Lesões de pele ou escaras?</label>
-      <select name="c3">
-        <option value="0">Sim</option>
-        <option value="1">Não</option>
-      </select>
-    </div>
+      <label>11. Consumo diário de proteínas?</label>
+      <select name="pergunta11">
+        <option value="0">Raramente</option>
+        <option value="1">Às vezes</option>
+        <option value="2">Todos os dias</option>
+      </select>
 
-    <div class="pergunta">
-      <label>4. Duas refeições completas por dia?</label>
-      <select name="c4">
-        <option value="1">Sim</option>
-        <option value="0">Não</option>
-      </select>
-    </div>
+      <label>12. Consumo diário de frutas e vegetais?</label>
+      <select name="pergunta12">
+        <option value="0">Não</option>
+        <option value="1">Sim</option>
+      </select>
 
-    <div class="pergunta">
-      <label>5. Consome frutas/verduras/proteínas/laticínios?</label>
-      <select name="c5">
-        <option value="2">Todos os dias</option>
-        <option value="1">Alguns</option>
-        <option value="0">Pouco</option>
-      </select>
-    </div>
+      <label>13. Quantidade de líquidos por dia?</label>
+      <select name="pergunta13">
+        <option value="0">Menos de 3 copos</option>
+        <option value="0.5">Entre 3 e 5 copos</option>
+        <option value="1">Mais de 5 copos</option>
+      </select>
 
-    <div class="pergunta">
-      <label>6. Consumo diário de líquidos?</label>
-      <select name="c6">
-        <option value="1">Sim</option>
-        <option value="0">Não</option>
-      </select>
-    </div>
+      <label>14. Modo de alimentação?</label>
+      <select name="pergunta14">
+        <option value="0">Dependente</option>
+        <option value="1">Ajuda parcial</option>
+        <option value="2">Independente</option>
+      </select>
 
-    <div class="pergunta">
-      <label>7. Modo de alimentação</label>
-      <select name="c7">
-        <option value="2">Sem ajuda</option>
-        <option value="1">Com alguma ajuda</option>
-        <option value="0">Dependente</option>
-      </select>
-    </div>
+      <label>15. Autoavaliação do estado nutricional?</label>
+      <select name="pergunta15">
+        <option value="0">Pior do que os outros</option>
+        <option value="1">Não sabe</option>
+        <option value="2">Igual ou melhor</option>
+      </select>
 
-    <div class="pergunta">
-      <label>8. Autoavaliação do estado nutricional</label>
-      <select name="c8">
-        <option value="2">Boa</option>
-        <option value="1">Média</option>
-        <option value="0">Ruim</option>
-      </select>
-    </div>
+      <label>16. Comparação de saúde com outras pessoas?</label>
+      <select name="pergunta16">
+        <option value="0">Pior</option>
+        <option value="0.5">Não sabe</option>
+        <option value="1">Igual</option>
+        <option value="2">Melhor</option>
+      </select>
 
-    <div class="pergunta">
-      <label>9. Comparado a outros idosos, como avalia sua saúde?</label>
-      <select name="c9">
-        <option value="2">Igual ou melhor</option>
-        <option value="1">Não sabe</option>
-        <option value="0">Pior</option>
-      </select>
-    </div>
+      <label>17. Circunferência da panturrilha (em cm):</label>
+      <input type="text" name="pergunta17" placeholder="Ex: 32" />
 
-    <div class="pergunta">
-      <label>10. Circunferência braquial (cm)</label>
-      <select name="c10">
-        <option value="3">&gt;22</option>
-        <option value="0">&le;22</option>
-      </select>
-    </div>
+      <label>18. Circunferência do braço (em cm):</label>
+      <input type="text" name="pergunta18" placeholder="Ex: 25" />
+    </div>
 
-    <div class="pergunta">
-      <label>11. Circunferência da panturrilha (cm)</label>
-      <select name="c11">
-        <option value="3">&gt;31</option>
-        <option value="0">&le;31</option>
-      </select>
-    </div>
+    <button type="submit">Calcular</button>
+  </form>
 
-    <div class="pergunta">
-      <label>12. IMC (repetido)</label>
-      <select name="c12">
-        <option value="3">&gt;23</option>
-        <option value="2">21–22.9</option>
-        <option value="1">19–20.9</option>
-        <option value="0">&lt;19</option>
-      </select>
-    </div>
+  <div id="resultado-final"></div>
 
-    <button type="button" onclick="finalizar()">Finalizar e gerar PDF</button>
-  </form>
-
-  <div id="resultado-final"></div>
+  <script src="script.js"></script>
 </body>
-</html>  
+</html>      
+ 
+      
+
+    
+   
+      
         
+
+   
+
     
