@@ -1,60 +1,86 @@
 
 
 
-function calcularMNASF() {
-  let total = 0;
+function calcular() {
+  const nome = document.getElementById('nome').value;
+  let pontos = 0;
 
   for (let i = 1; i <= 6; i++) {
-    const resposta = document.querySelector(`input[name="pergunta${i}"]:checked`);
-    if (resposta) {
-      total += parseInt(resposta.value);
-    }
+    const valor = parseInt(document.querySelector(`select[name="p${i}"]`).value);
+    pontos += valor;
   }
 
-  const nome = document.getElementById("nome").value || "Paciente";
-
-  if (total <= 11) {
-    document.getElementById("mna-sf").style.display = "none";
-    document.getElementById("mna-completo").style.display = "block";
+  let classificacao = '';
+  if (pontos >= 12) {
+    classificacao = 'Estado nutricional adequado';
+  } else if (pontos > 8) {
+    classificacao = 'Risco de desnutrição';
   } else {
-    document.getElementById("resultado-final").innerText =
-      `Resultado: ${total} pontos - Avaliação concluída para ${nome}.`;
-    gerarPDF(nome, total);
+    classificacao = 'Desnutrido';
+  }
+
+  let resultadoDiv = document.getElementById('resultado-sf');
+  resultadoDiv.innerHTML = `
+    <h3>Resultado MNA-SF</h3>
+    <p><strong>Paciente:</strong> ${nome}</p>
+    <p><strong>Pontuação:</strong> ${pontos} pontos</p>
+    <p><strong>Classificação:</strong> ${classificacao}</p>
+  `;
+
+  // Mostra o MNA completo se a pontuação for 11 ou menos
+  if (pontos <= 11) {
+    document.getElementById('mna-completo').style.display = 'block';
+  } else {
+    document.getElementById('mna-completo').style.display = 'none';
+    gerarPDF(nome, pontos, classificacao); // Gera PDF direto se não precisar do MNA completo
   }
 }
 
 function finalizar() {
-  let total = 0;
+  const nome = document.getElementById('nome').value;
 
-  // Soma MNA-SF
+  let pontosSF = 0;
+  let pontosCompleto = 0;
+
   for (let i = 1; i <= 6; i++) {
-    const resposta = document.querySelector(`input[name="pergunta${i}"]:checked`);
-    if (resposta) {
-      total += parseInt(resposta.value);
-    }
+    pontosSF += parseInt(document.querySelector(`select[name="p${i}"]`).value);
   }
 
-  // Soma MNA completo
-  for (let i = 7; i <= 18; i++) {
-    const resposta = document.querySelector(`input[name="pergunta${i}"]:checked`);
-    if (resposta) {
-      total += parseInt(resposta.value);
-    }
+  for (let i = 1; i <= 12; i++) {
+    pontosCompleto += parseInt(document.querySelector(`select[name="c${i}"]`).value);
   }
 
-  const nome = document.getElementById("nome").value || "Paciente";
-  document.getElementById("resultado-final").innerText =
-    `Resultado final: ${total} pontos - Avaliação completa para ${nome}.`;
-  gerarPDF(nome, total);
+  const total = pontosSF + pontosCompleto;
+
+  let classificacao = '';
+  if (total >= 24) {
+    classificacao = 'Estado nutricional adequado';
+  } else if (total >= 17) {
+    classificacao = 'Risco de desnutrição';
+  } else {
+    classificacao = 'Desnutrido';
+  }
+
+  const resultadoFinal = document.getElementById('resultado-final');
+  resultadoFinal.innerHTML = `
+    <h3>Resultado Final</h3>
+    <p><strong>Paciente:</strong> ${nome}</p>
+    <p><strong>Pontuação Total:</strong> ${total} pontos</p>
+    <p><strong>Classificação:</strong> ${classificacao}</p>
+  `;
+
+  gerarPDF(nome, total, classificacao);
 }
 
-function gerarPDF(nome, total) {
-  const doc = new window.jspdf.jsPDF();
+function gerarPDF(nome, total, classificacao) {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
   doc.setFontSize(14);
-  doc.text(`Mini Nutritional Assessment (MNA)`, 20, 20);
-  doc.text(`Nome do paciente: ${nome}`, 20, 40);
-  doc.text(`Pontuação final: ${total} pontos`, 20, 50);
-  doc.text(`Nutricionista Paula Guedes`, 20, 70);
-  doc.save(`MNA_${nome.replace(/\s+/g, "_")}.pdf`);
+  doc.text('Mini Avaliação Nutricional (MNA)', 20, 20);
+  doc.text(`Paciente: ${nome}`, 20, 40);
+  doc.text(`Pontuação total: ${total} pontos`, 20, 50);
+  doc.text(`Classificação: ${classificacao}`, 20, 60);
+
+  doc.save(`MNA-${nome}.pdf`);
 }
-  
