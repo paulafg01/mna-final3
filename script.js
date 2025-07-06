@@ -1,6 +1,5 @@
 
 window.onload = () => {
-  // Garante que o jsPDF está disponível no escopo global
   window.jsPDF = window.jspdf.jsPDF;
 };
 
@@ -9,17 +8,15 @@ function finalizar() {
   let pontosSF = 0;
   let pontosCompleto = 0;
 
-  // Soma pontos do MNA-SF
   for (let i = 1; i <= 6; i++) {
-    const val = document.querySelector(`select[name="p${i}"]`).value;
-    pontosSF += parseInt(val) || 0;
+    const val = document.querySelector(`select[name="p${i}"]`);
+    pontosSF += parseInt(val?.value || 0);
   }
 
-  // Soma MNA completo se necessário
   if (pontosSF <= 11) {
     for (let i = 1; i <= 12; i++) {
-      const val = document.querySelector(`select[name="c${i}"]`).value;
-      pontosCompleto += parseInt(val) || 0;
+      const val = document.querySelector(`select[name="c${i}"]`);
+      pontosCompleto += parseInt(val?.value || 0);
     }
   }
 
@@ -47,13 +44,10 @@ function finalizar() {
 
 function gerarPDF(nome, total, classificacao) {
   const doc = new jsPDF();
-
   doc.setFontSize(14);
   doc.text('Mini Avaliação Nutricional (MNA)', 20, 20);
   doc.text(`Paciente: ${nome}`, 20, 40);
   doc.text(`Pontuação total: ${total} pontos`, 20, 50);
   doc.text(`Classificação: ${classificacao}`, 20, 60);
-
   doc.save(`MNA-${nome}.pdf`);
 }
-   
