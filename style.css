@@ -1,76 +1,59 @@
-document.getElementById("mna-sf").addEventListener("submit", function (e) {
-  e.preventDefault();
-
-  const nome = document.getElementById("nome").value.trim();
-  const respostas = [
-    Number(this.p1.value),
-    Number(this.p2.value),
-    Number(this.p3.value),
-    Number(this.p4.value),
-    Number(this.p5.value),
-    Number(this.p6.value),
-  ];
-
-  const total = respostas.reduce((a, b) => a + b, 0);
-
-  let resultado = "";
-  if (total >= 12) {
-    resultado = "Estado nutricional normal";
-  } else if (total >= 8) {
-    resultado = "Risco de desnutrição";
-  } else {
-    resultado = "Desnutrido";
-  }
-
-  document.getElementById("resultado-sf").innerHTML = `
-    <h3>Resultado MNA-SF</h3>
-    <p><strong>Paciente:</strong> ${nome}</p>
-    <p><strong>Pontuação:</strong> ${total} pontos</p>
-    <p><strong>Classificação:</strong> ${resultado}</p>
-  `;
-
-  // Se pontuação for 11 ou menos, mostra formulário completo
-  if (total <= 11) {
-    document.getElementById("mna-completo").style.display = "block";
-  } else {
-    document.getElementById("mna-completo").style.display = "none";
-  }
-});
-
-function finalizar() {
-  const c1 = Number(document.querySelector('[name="c1"]').value);
-  const c2 = Number(document.querySelector('[name="c2"]').value);
-
-  const totalCompleto = c1 + c2;
-
-  const resultadoFinal = `
-    <h3>Resultado Final MNA</h3>
-    <p><strong>Pontuação adicional:</strong> ${totalCompleto} pontos</p>
-    <p><strong>Total final (MNA-SF + completo):</strong> (soma manual necessária)</p>
-  `;
-
-  document.getElementById("resultado-final").innerHTML = resultadoFinal;
-
-  gerarPDF();
+body {
+  font-family: Arial, sans-serif;
+  margin: 40px;
+  background-color: #fdfdfd;
+  color: #333;
 }
 
-function gerarPDF() {
-  const doc = new window.jspdf.jsPDF();
-  const nome = document.getElementById("nome").value.trim();
+h1, h2 {
+  color: #003366;
+}
 
-  doc.text(`Mini Avaliação Nutricional - MNA`, 10, 10);
-  doc.text(`Nome do paciente: ${nome}`, 10, 20);
+p {
+  margin-bottom: 20px;
+}
 
-  const resultadoSf = document.getElementById("resultado-sf").innerText;
-  const resultadoCompleto = document.getElementById("resultado-final").innerText;
+form {
+  background-color: #f4f4f4;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
 
-  doc.text("Resultado MNA-SF:", 10, 30);
-  doc.text(resultadoSf, 10, 40);
+.pergunta {
+  margin-bottom: 15px;
+}
 
-  if (resultadoCompleto) {
-    doc.text("Resultado MNA Completo:", 10, 80);
-    doc.text(resultadoCompleto, 10, 90);
-  }
+label {
+  font-weight: bold;
+}
 
-  doc.save(`MNA_${nome || "paciente"}.pdf`);
+select, input[type="text"] {
+  width: 100%;
+  padding: 6px;
+  margin-top: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  background-color: #003366;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #00509e;
+}
+
+#resultado-sf, #resultado-final {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #e6f0ff;
+  border-left: 6px solid #003366;
+  border-radius: 5px;
 }
