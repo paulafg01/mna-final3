@@ -1,19 +1,21 @@
 
- <!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MNA - Mini Avaliação Nutricional</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MNA – Mini Avaliação Nutricional</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>MNA - Mini Avaliação Nutricional</h1>
+  <h1>MNA – Mini Avaliação Nutricional</h1>
   <p>App desenvolvido por Paula Guedes</p>
 
   <!-- Formulário MNA-SF -->
   <form id="mna-sf">
-    <label>Nome do paciente: <input type="text" name="nome" id="nome" required></label><br><br>
+    <label>Nome do paciente:
+      <input type="text" name="nome" id="nome" required />
+    </label><br><br>
 
     <div class="pergunta">
       <label>1. Perda de apetite?</label><br>
@@ -43,7 +45,7 @@
     </div>
 
     <div class="pergunta">
-      <label>4. Estresse/doença aguda?</label><br>
+      <label>4. Estresse ou doença aguda?</label><br>
       <select name="p4">
         <option value="0">Sim</option>
         <option value="2">Não</option>
@@ -53,9 +55,9 @@
     <div class="pergunta">
       <label>5. Problemas neuropsicológicos?</label><br>
       <select name="p5">
-        <option value="0">Demência/Depressão severa</option>
+        <option value="0">Demência grave</option>
         <option value="1">Demência leve</option>
-        <option value="2">Nenhum</option>
+        <option value="2">Sem problemas</option>
       </select>
     </div>
 
@@ -69,12 +71,13 @@
       </select>
     </div>
 
-    <button type="submit">Calcular</button>
+    <br>
+    <button type="submit">Calcular Pontuação</button>
   </form>
 
   <div id="resultado-sf"></div>
 
-  <!-- Formulário MNA Completo (inicialmente oculto) -->
+  <!-- MNA Completo (aparece se SF ≤ 11) -->
   <div id="mna-completo" style="display: none;">
     <h2>MNA Completo</h2>
     <p>Você pode inserir aqui o formulário completo com mais perguntas, se desejar.</p>
@@ -97,6 +100,7 @@
         </select>
       </div>
 
+      <br>
       <button type="button" onclick="finalizar()">Gerar PDF</button>
     </form>
   </div>
@@ -105,4 +109,4 @@
 
   <script src="script.js"></script>
 </body>
-</html> 
+</html>
