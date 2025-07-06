@@ -1,108 +1,76 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MNA - Mini Avaliação Nutricional</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <h1>MNA - Mini Avaliação Nutricional</h1>
-    <p>App desenvolvido por Paula Guedes</p>
+document.getElementById("mna-sf").addEventListener("submit", function (e) {
+  e.preventDefault();
 
-    <!-- Formulário MNA-SF -->
-    <form id="mna-sf">
-        <label>Nome do paciente: <input type="text" name="nome" id="nome"></label><br><br>
+  const nome = document.getElementById("nome").value.trim();
+  const respostas = [
+    Number(this.p1.value),
+    Number(this.p2.value),
+    Number(this.p3.value),
+    Number(this.p4.value),
+    Number(this.p5.value),
+    Number(this.p6.value),
+  ];
 
-        <div class="pergunta">
-            <label>1. Perda de apetite?</label><br>
-            <select name="p1">
-                <option value="0">Grave</option>
-                <option value="1">Moderada</option>
-                <option value="2">Sem perda</option>
-            </select>
-        </div>
+  const total = respostas.reduce((a, b) => a + b, 0);
 
-        <div class="pergunta">
-            <label>2. Perda de peso?</label><br>
-            <select name="p2">
-                <option value="0">≥3kg</option>
-                <option value="1">1–3kg</option>
-                <option value="2">Não sabe</option>
-                <option value="3">Sem perda</option>
-            </select>
-        </div>
+  let resultado = "";
+  if (total >= 12) {
+    resultado = "Estado nutricional normal";
+  } else if (total >= 8) {
+    resultado = "Risco de desnutrição";
+  } else {
+    resultado = "Desnutrido";
+  }
 
-        <div class="pergunta">
-            <label>3. Mobilidade?</label><br>
-            <select name="p3">
-                <option value="0">Acamado</option>
-                <option value="1">Anda com ajuda</option>
-                <option value="2">Anda sozinho</option>
-            </select>
-        </div>
+  document.getElementById("resultado-sf").innerHTML = `
+    <h3>Resultado MNA-SF</h3>
+    <p><strong>Paciente:</strong> ${nome}</p>
+    <p><strong>Pontuação:</strong> ${total} pontos</p>
+    <p><strong>Classificação:</strong> ${resultado}</p>
+  `;
 
-        <div class="pergunta">
-            <label>4. Estresse ou doença aguda?</label><br>
-            <select name="p4">
-                <option value="0">Sim</option>
-                <option value="2">Não</option>
-            </select>
-        </div>
+  // Se pontuação for 11 ou menos, mostra formulário completo
+  if (total <= 11) {
+    document.getElementById("mna-completo").style.display = "block";
+  } else {
+    document.getElementById("mna-completo").style.display = "none";
+  }
+});
 
-        <div class="pergunta">
-            <label>5. Problemas neuropsicológicos?</label><br>
-            <select name="p5">
-                <option value="0">Demência ou depressão severa</option>
-                <option value="1">Demência leve</option>
-                <option value="2">Sem problemas</option>
-            </select>
-        </div>
+function finalizar() {
+  const c1 = Number(document.querySelector('[name="c1"]').value);
+  const c2 = Number(document.querySelector('[name="c2"]').value);
 
-        <div class="pergunta">
-            <label>6. IMC?</label><br>
-            <select name="p6">
-                <option value="0">Menor que 19</option>
-                <option value="1">Entre 19 e 21</option>
-                <option value="2">Entre 21 e 23</option>
-                <option value="3">Maior que 23</option>
-            </select>
-        </div>
+  const totalCompleto = c1 + c2;
 
-        <button type="submit">Calcular Pontuação</button>
-    </form>
+  const resultadoFinal = `
+    <h3>Resultado Final MNA</h3>
+    <p><strong>Pontuação adicional:</strong> ${totalCompleto} pontos</p>
+    <p><strong>Total final (MNA-SF + completo):</strong> (soma manual necessária)</p>
+  `;
 
-    <div id="resultado-sf"></div>
+  document.getElementById("resultado-final").innerHTML = resultadoFinal;
 
-    <!-- MNA Completo (invisível no início) -->
-    <div id="mna-completo" style="display: none;">
-        <h2>MNA Completo</h2>
-        <p>Você pode inserir aqui o formulário completo com mais perguntas, se desejar.</p>
+  gerarPDF();
+}
 
-        <form id="mna-completo-form">
-            <div class="pergunta">
-                <label>7. Vive de forma independente?</label><br>
-                <select name="c1">
-                    <option value="2">Sim</option>
-                    <option value="1">Não</option>
-                </select>
-            </div>
+function gerarPDF() {
+  const doc = new window.jspdf.jsPDF();
+  const nome = document.getElementById("nome").value.trim();
 
-            <div class="pergunta">
-                <label>8. Quantas refeições faz por dia?</label><br>
-                <select name="c2">
-                    <option value="2">3 ou mais</option>
-                    <option value="1">2</option>
-                    <option value="0">1 ou nenhuma</option>
-                </select>
-            </div>
+  doc.text(`Mini Avaliação Nutricional - MNA`, 10, 10);
+  doc.text(`Nome do paciente: ${nome}`, 10, 20);
 
-            <button type="button" onclick="finalizar()">Gerar PDF</button>
-        </form>
-    </div>
+  const resultadoSf = document.getElementById("resultado-sf").innerText;
+  const resultadoCompleto = document.getElementById("resultado-final").innerText;
 
-    <div id="resultado-final"></div>
+  doc.text("Resultado MNA-SF:", 10, 30);
+  doc.text(resultadoSf, 10, 40);
 
-    <script src="script.js"></script>
-</body>
-</html>
+  if (resultadoCompleto) {
+    doc.text("Resultado MNA Completo:", 10, 80);
+    doc.text(resultadoCompleto, 10, 90);
+  }
+
+  doc.save(`MNA_${nome || "paciente"}.pdf`);
+}
