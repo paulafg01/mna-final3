@@ -1,87 +1,106 @@
 
-function calcularPontuacao() {
-    const nome = document.getElementById("nome").value || "Paciente";
+<form id="mna-completo-form">
+  <div class="pergunta">
+    <label>7. Vive de forma independente?</label><br>
+    <select name="c1">
+      <option value="2">Sim</option>
+      <option value="1">Não</option>
+    </select>
+  </div>
 
-    let p1 = parseInt(document.querySelector('select[name="p1"]').value);
-    let p2 = parseInt(document.querySelector('select[name="p2"]').value);
-    let p3 = parseInt(document.querySelector('select[name="p3"]').value);
-    let p4 = parseInt(document.querySelector('select[name="p4"]').value);
-    let p5 = parseInt(document.querySelector('select[name="p5"]').value);
-    let p6 = parseInt(document.querySelector('select[name="p6"]').value);
+  <div class="pergunta">
+    <label>8. Quantas refeições faz por dia?</label><br>
+    <select name="c2">
+      <option value="2">3 ou mais</option>
+      <option value="1">2</option>
+      <option value="0">1 ou nenhuma</option>
+    </select>
+  </div>
 
-    let soma = p1 + p2 + p3 + p4 + p5 + p6;
+  <div class="pergunta">
+    <label>9. Consome dois ou mais laticínios por dia?</label><br>
+    <select name="c3">
+      <option value="1">Sim</option>
+      <option value="0">Não</option>
+    </select>
+  </div>
 
-    let classificacao = "";
-    if (soma >= 12) {
-        classificacao = "Estado nutricional normal";
-    } else if (soma >= 8) {
-        classificacao = "Risco de desnutrição";
-    } else {
-        classificacao = "Desnutrido";
-    }
+  <div class="pergunta">
+    <label>10. Consome carne, peixe ou ovos diariamente?</label><br>
+    <select name="c4">
+      <option value="1">Sim</option>
+      <option value="0">Não</option>
+    </select>
+  </div>
 
-    document.getElementById("resultado-sf").innerHTML =
-        `<h3>Resultado MNA-SF</h3>
-         <p><strong>Paciente:</strong> ${nome}</p>
-         <p><strong>Pontuação:</strong> ${soma} pontos</p>
-         <p><strong>Classificação:</strong> ${classificacao}</p>`;
+  <div class="pergunta">
+    <label>11. Come frutas ou vegetais diariamente?</label><br>
+    <select name="c5">
+      <option value="1">Sim</option>
+      <option value="0">Não</option>
+    </select>
+  </div>
 
-    // Se escore ≤ 11, mostra o formulário completo
-    if (soma <= 11) {
-        document.getElementById("mna-completo").style.display = "block";
-    } else {
-        document.getElementById("mna-completo").style.display = "none";
-    }
-}
+  <div class="pergunta">
+    <label>12. Consome mais de 5 copos de líquidos por dia?</label><br>
+    <select name="c6">
+      <option value="1">Sim</option>
+      <option value="0">Não</option>
+    </select>
+  </div>
 
-function finalizar() {
-    const nome = document.getElementById("nome").value || "Paciente";
+  <div class="pergunta">
+    <label>13. Modo de alimentação?</label><br>
+    <select name="c7">
+      <option value="2">Sozinho</option>
+      <option value="1">Com ajuda</option>
+      <option value="0">Incapaz de se alimentar</option>
+    </select>
+  </div>
 
-    // Somar pontos do MNA completo (perguntas c1 a c12 → valores de 0 a 2)
-    let totalCompleto = 0;
-    for (let i = 1; i <= 12; i++) {
-        const select = document.querySelector(`select[name="c${i}"]`);
-        if (select) {
-            totalCompleto += parseInt(select.value);
-        }
-    }
+  <div class="pergunta">
+    <label>14. Estado nutricional?</label><br>
+    <select name="c8">
+      <option value="3">Sem perda de peso</option>
+      <option value="2">Perda de 1 a 3 kg</option>
+      <option value="1">Perda de mais de 3 kg</option>
+      <option value="0">Não sabe</option>
+    </select>
+  </div>
 
-    // Recalcular MNA-SF
-    let p1 = parseInt(document.querySelector('select[name="p1"]').value);
-    let p2 = parseInt(document.querySelector('select[name="p2"]').value);
-    let p3 = parseInt(document.querySelector('select[name="p3"]').value);
-    let p4 = parseInt(document.querySelector('select[name="p4"]').value);
-    let p5 = parseInt(document.querySelector('select[name="p5"]').value);
-    let p6 = parseInt(document.querySelector('select[name="p6"]').value);
+  <div class="pergunta">
+    <label>15. Circunferência braquial (CB)?</label><br>
+    <select name="c9">
+      <option value="3">Maior que 22 cm</option>
+      <option value="0">22 cm ou menos</option>
+    </select>
+  </div>
 
-    let somaSf = p1 + p2 + p3 + p4 + p5 + p6;
-    let totalGeral = somaSf + totalCompleto;
+  <div class="pergunta">
+    <label>16. Circunferência da panturrilha (CP)?</label><br>
+    <select name="c10">
+      <option value="3">Maior que 31 cm</option>
+      <option value="0">31 cm ou menos</option>
+    </select>
+  </div>
 
-    let resultadoFinal = "Classificação final: ";
-    if (totalGeral >= 24) {
-        resultadoFinal += "Estado nutricional normal";
-    } else if (totalGeral >= 17) {
-        resultadoFinal += "Risco de desnutrição";
-    } else {
-        resultadoFinal += "Desnutrido";
-    }
+  <div class="pergunta">
+    <label>17. Você considera que sua saúde em geral é:</label><br>
+    <select name="c11">
+      <option value="2">Boa</option>
+      <option value="1">Média</option>
+      <option value="0">Ruim</option>
+    </select>
+  </div>
 
-    document.getElementById("resultado-final").innerHTML =
-        `<h3>Resultado Final</h3>
-         <p><strong>Paciente:</strong> ${nome}</p>
-         <p><strong>Pontuação final:</strong> ${totalGeral} pontos</p>
-         <p><strong>${resultadoFinal}</strong></p>`;
+  <div class="pergunta">
+    <label>18. Está tomando mais de 3 medicamentos por dia?</label><br>
+    <select name="c12">
+      <option value="0">Sim</option>
+      <option value="1">Não</option>
+    </select>
+  </div>
 
-    gerarPDF(nome, totalGeral, resultadoFinal);
-}
-
-function gerarPDF(nome, pontuacao, classificacao) {
-    const doc = new jsPDF();
-    doc.setFontSize(16);
-    doc.text("MNA - Mini Avaliação Nutricional", 20, 20);
-    doc.setFontSize(12);
-    doc.text(`Paciente: ${nome}`, 20, 40);
-    doc.text(`Pontuação total: ${pontuacao} pontos`, 20, 50);
-    doc.text(`${classificacao}`, 20, 60);
-    doc.save(`MNA_${nome}.pdf`);
-}
+  <button type="button" onclick="finalizar()">Gerar PDF</button>
+</form>
+   
