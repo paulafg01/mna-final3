@@ -1,106 +1,74 @@
 
-<form id="mna-completo-form">
-  <div class="pergunta">
-    <label>7. Vive de forma independente?</label><br>
-    <select name="c1">
-      <option value="2">Sim</option>
-      <option value="1">Não</option>
-    </select>
-  </div>
+function calcularPontuacao() {
+    const nome = document.getElementById("nome").value.trim();
+    if (!nome) {
+        alert("Por favor, insira o nome do paciente.");
+        return;
+    }
 
-  <div class="pergunta">
-    <label>8. Quantas refeições faz por dia?</label><br>
-    <select name="c2">
-      <option value="2">3 ou mais</option>
-      <option value="1">2</option>
-      <option value="0">1 ou nenhuma</option>
-    </select>
-  </div>
+    let pontuacaoSF = 0;
+    for (let i = 1; i <= 6; i++) {
+        const valor = document.querySelector(`select[name=p${i}]`).value;
+        pontuacaoSF += parseInt(valor);
+    }
 
-  <div class="pergunta">
-    <label>9. Consome dois ou mais laticínios por dia?</label><br>
-    <select name="c3">
-      <option value="1">Sim</option>
-      <option value="0">Não</option>
-    </select>
-  </div>
+    let classificacao = "";
+    if (pontuacaoSF >= 12) {
+        classificacao = "Estado nutricional normal";
+    } else if (pontuacaoSF >= 8) {
+        classificacao = "Risco de desnutrição";
+    } else {
+        classificacao = "Desnutrido";
+    }
 
-  <div class="pergunta">
-    <label>10. Consome carne, peixe ou ovos diariamente?</label><br>
-    <select name="c4">
-      <option value="1">Sim</option>
-      <option value="0">Não</option>
-    </select>
-  </div>
+    document.getElementById("resultado-sf").innerHTML = `
+        <h3>Resultado MNA-SF</h3>
+        <p><strong>Paciente:</strong> ${nome}</p>
+        <p><strong>Pontuação:</strong> ${pontuacaoSF} pontos</p>
+        <p><strong>Classificação:</strong> ${classificacao}</p>
+    `;
 
-  <div class="pergunta">
-    <label>11. Come frutas ou vegetais diariamente?</label><br>
-    <select name="c5">
-      <option value="1">Sim</option>
-      <option value="0">Não</option>
-    </select>
-  </div>
+    if (pontuacaoSF <= 11) {
+        document.getElementById("mna-completo").style.display = "block";
+        window.scrollTo(0, document.body.scrollHeight);
+    } else {
+        document.getElementById("mna-completo").style.display = "none";
+    }
+}
 
-  <div class="pergunta">
-    <label>12. Consome mais de 5 copos de líquidos por dia?</label><br>
-    <select name="c6">
-      <option value="1">Sim</option>
-      <option value="0">Não</option>
-    </select>
-  </div>
+function finalizar() {
+    const nome = document.getElementById("nome").value.trim();
+    if (!nome) {
+        alert("Por favor, insira o nome do paciente.");
+        return;
+    }
 
-  <div class="pergunta">
-    <label>13. Modo de alimentação?</label><br>
-    <select name="c7">
-      <option value="2">Sozinho</option>
-      <option value="1">Com ajuda</option>
-      <option value="0">Incapaz de se alimentar</option>
-    </select>
-  </div>
+    let pontuacaoTotal = 0;
 
-  <div class="pergunta">
-    <label>14. Estado nutricional?</label><br>
-    <select name="c8">
-      <option value="3">Sem perda de peso</option>
-      <option value="2">Perda de 1 a 3 kg</option>
-      <option value="1">Perda de mais de 3 kg</option>
-      <option value="0">Não sabe</option>
-    </select>
-  </div>
+    // Soma MNA-SF
+    for (let i = 1; i <= 6; i++) {
+        pontuacaoTotal += parseInt(document.querySelector(`select[name=p${i}]`).value);
+    }
 
-  <div class="pergunta">
-    <label>15. Circunferência braquial (CB)?</label><br>
-    <select name="c9">
-      <option value="3">Maior que 22 cm</option>
-      <option value="0">22 cm ou menos</option>
-    </select>
-  </div>
+    // Soma perguntas do MNA completo
+    for (let i = 1; i <= 12; i++) {
+        const valor = document.querySelector(`select[name=c${i}]`);
+        if (valor) {
+            pontuacaoTotal += parseInt(valor.value);
+        }
+    }
 
-  <div class="pergunta">
-    <label>16. Circunferência da panturrilha (CP)?</label><br>
-    <select name="c10">
-      <option value="3">Maior que 31 cm</option>
-      <option value="0">31 cm ou menos</option>
-    </select>
-  </div>
+    const doc = new jsPDF();
+    doc.setFontSize(16);
+    doc.text(`Mini Avaliação Nutricional (MNA)`, 20, 20);
+    doc.setFontSize(12);
+    doc.text(`Paciente: ${nome}`, 20, 35);
+    doc.text(`Pontuação Total: ${pontuacaoTotal}`, 20, 45);
+    doc.save(`MNA_${nome}.pdf`);
 
-  <div class="pergunta">
-    <label>17. Você considera que sua saúde em geral é:</label><br>
-    <select name="c11">
-      <option value="2">Boa</option>
-      <option value="1">Média</option>
-      <option value="0">Ruim</option>
-    </select>
-  </div>
-
-  <div class="pergunta">
-    <label>18. Está tomando mais de 3 medicamentos por dia?</label><br>
-    <select name="c12">
-      <option value="0">Sim</option>
-      <option value="1">Não</option>
-    </select>
-  </div>
-
-  <button type="button" onclick="finalizar()">Gerar PDF</button>
-</form>
-   
+    document.getElementById("resultado-final").innerHTML = `
+        <h3>PDF gerado!</h3>
+        <p><strong>Paciente:</strong> ${nome}</p>
+        <p><strong>Pontuação total:</strong> ${pontuacaoTotal} pontos</p>
+    `;
+}
