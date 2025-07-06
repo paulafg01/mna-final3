@@ -1,4 +1,5 @@
-function finalizar() {
+
+ function finalizar() {
   const nome = document.getElementById('nome').value;
   let pontosSF = 0;
   let pontosCompleto = 0;
